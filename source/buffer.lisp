@@ -922,29 +922,19 @@ identifiers."
   dead-buffer)
 
 (defmethod document-model ((buffer buffer))
-  (ps-labels :buffer buffer
-    ((%count-dom-elements
-      ()
-      (defvar dom-counter 0)
-      (defun count-dom-elements (node)
-        (incf dom-counter)
-        (dolist (child (ps:chain node children))
-          (count-dom-elements child))
-        dom-counter)
-      (setf dom-counter 0)
-      (count-dom-elements (nyxt/ps:qs document "html"))))
-    (if (dead-buffer-p buffer)
-        (slot-value buffer 'document-model)
-        (let ((value (slot-value buffer 'document-model))
-              (element-count (%count-dom-elements)))
-          (if (and value element-count
-                   ;; Check whether the difference in element count is significant.
-                   (< (abs (- (length (clss:select "*" value)) (truncate element-count)))
-                      (document-model-delta-threshold buffer)))
-              value
-              (progn
-                (update-document-model :buffer buffer)
-                (slot-value buffer 'document-model)))))))
+  (if (dead-buffer-p buffer)
+      (slot-value buffer 'document-model)
+      (let ((value (slot-value buffer 'document-model))
+            (element-count (ps-eval :buffer buffer
+                             (ps:@ (nyxt/ps:qsa document "[nyxt-identifier]") length))))
+        (if (and value
+                 element-count
+                 ;; Check whether the difference in element count is significant.
+                 (< (abs (- (length (clss:select "[nyxt-identifier]" value))
+                            (truncate element-count)))
+                    (document-model-delta-threshold buffer)))
+            value
+            (update-document-model :buffer buffer)))))
 
 (defmethod proxy ((buffer buffer))
   (slot-value buffer 'proxy))
