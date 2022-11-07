@@ -124,6 +124,14 @@ failures."))
   (append (call-next-method)
           `(("Context" ,(context-name buffer)))))
 
+(defmethod s-serialization:serializable-slots ((buffer gtk-buffer))
+  "Discard gtk-object which cannot be serialized."
+  (set-difference
+   (mapcar #'closer-mop:slot-definition-name
+           (closer-mop:class-slots (class-of buffer)))
+   '(gtk-object
+     handler-ids)))
+
 (nyxt::without-package-locks
   (handler-bind ((warning #'muffle-warning))
     (defclass renderer-buffer (gtk-buffer)
