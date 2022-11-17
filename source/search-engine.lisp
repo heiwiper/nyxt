@@ -31,6 +31,13 @@ Simple completion functions can be built via `make-search-completion-function'")
   (:export-accessor-names-p t)
   (:accessor-name-transformer (class*:make-name-transformer name)))
 
+(defmethod s-serialization:serialize-sexp-slot ((self search-engine) (slot (eql 'completion-function))
+                                                stream serialization-state)
+  (declare (ignore serialization-state))
+  (prin1
+   (nyxt::maybe-function-name (slot-value self slot))
+   stream))
+
 (defmethod fallback-url ((engine search-engine))
   (or (slot-value engine 'fallback-url)
       (quri:uri (format nil (search-url engine) ""))))
