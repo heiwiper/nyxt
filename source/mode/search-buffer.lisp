@@ -44,7 +44,8 @@ is found.")
       keyscheme:vi-normal
       (list
        "/" 'search-buffer
-       "?" 'remove-search-hints)))))
+       "?" 'remove-search-hints))))
+  (:toggler-command-p nil))
 
 (define-class search-match ()
   ((identifier)
