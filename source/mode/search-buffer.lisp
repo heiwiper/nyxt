@@ -223,10 +223,10 @@ is found.")
   (:metaclass user-class))
 
 (defmethod initialize-instance :after ((source search-buffer-source) &key)
-  (setf (prompter:name source)
-        (format nil "~a (~a+ characters)"
-                (prompter:name source)
-                (minimum-search-length source))))
+  (let ((min-length (minimum-search-length source)))
+    (setf (prompter:name source) (format nil "~a ~@[(~a+ chars)~]"
+                                         (prompter:name source)
+                                         (when (> min-length 1) min-length)))))
 
 (define-command search-buffer (&key case-sensitive-p)
   "Search on the current buffer.
@@ -237,14 +237,15 @@ Example:
 
   (define-configuration buffer
     ((keep-search-hints-p nil)))"
-  (prompt :prompt "Search text"
-          :sources (make-instance 'search-buffer-source
-                                  :case-sensitive-p case-sensitive-p
-                                  :actions-on-return
-                                  (lambda (search-match)
-                                    (unless (keep-search-hints-p (current-buffer))
-                                      (remove-search-hints))
-                                    search-match))))
+  (let ((source (make-instance 'search-buffer-source
+                               :case-sensitive-p case-sensitive-p
+                               :actions-on-return
+                               (lambda (search-match)
+                                 (unless (keep-search-hints-p (current-buffer))
+                                   (remove-search-hints))
+                                 search-match))))
+    (prompt :prompt (prompter:name source)
+            :sources source)))
 
 (define-command search-buffers (&key case-sensitive-p)
   "Search multiple buffers."
