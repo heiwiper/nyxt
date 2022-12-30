@@ -2,7 +2,7 @@
 ;;;; SPDX-License-Identifier: BSD-3-Clause
 
 (nyxt:define-package :nyxt/search-buffer-mode
-    (:documentation "Mode for element hints."))
+    (:documentation "Incremental in-buffer search."))
 (in-package :nyxt/search-buffer-mode)
 
 (define-mode search-buffer-mode ()
