@@ -201,15 +201,6 @@ For instance, to include images:
       (when (ps:lisp scroll)
         (ps:chain %element (scroll-into-view (ps:create block "center")))))))
 
-(export-always 'unhighlight-selected-hint)
-(define-parenscript unhighlight-selected-hint ()
-  ;; There should be, at most, a unique element with the
-  ;; "nyxt-select-hint" class.
-  ;; querySelectAll, unlike querySelect, handles the case when none are
-  ;; found.
-  (ps:dolist (selected-hint (nyxt/ps:qsa document ".nyxt-select-hint"))
-    (ps:chain selected-hint class-list (remove "nyxt-select-hint"))))
-
 (define-class hint-source (prompter:source)
   ((prompter:name "Hints")
    (prompter:actions-on-current-suggestion-enabled-p t)
