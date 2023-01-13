@@ -66,6 +66,31 @@ is found.")
                                  (beg match)
                                  (end match))))
 
+;; move to utilities.lisp?
+;; the min length is (+ len-match (* len-ellipsis 2))
+;; if len-max is lower than that, scream with an error
+(defun format-match-string (str beg end &optional (len-max 40) (ellipsis "[...]"))
+  "TODO"
+  (let ((len-str (length str))
+        (len-ellipsis (length ellipsis))
+        (len-match (1+ (- end beg))))
+    (cond ((or (< beg 0) (> end len-str)) (error "Match out of bounds."))
+          ((>= len-max len-str) str)
+          ((> len-match len-max)
+           (str:concat (subseq str 0 (- len-max len-ellipsis))
+                       ellipsis))
+          ((> (length str) len-max)
+           (let* ((delta (floor (/ (- len-max len-match) 2)))
+                  (new-beg (max 0 (- beg delta)))
+                  (new-end (min (length str) (+ end delta)))
+                  (beg-omitted-p (not (zerop new-beg)))
+                  (end-omitted-p (not (= new-end (length str)))))
+             (str:concat (when beg-omitted-p ellipsis)
+                         (subseq str
+                                 (if beg-omitted-p (+ new-beg len-ellipsis) new-beg)
+                                 (if end-omitted-p (- new-end len-ellipsis) new-end))
+                         (when end-omitted-p ellipsis)))))))
+
 (defmethod prompter:object-attributes ((match search-match) (source prompter:source))
   `(("Text" ,(body match) nil 3)
     ("ID" ,(identifier match))
