@@ -164,6 +164,9 @@
         (highlight-current-hint :selector (format nil "[nyxt-search-hint=\"~a\"]"
                                                   (match-index suggestion))
                                 :scroll t))))
+   (prompter:constructor (lambda (source)
+                           (declare (ignore source))
+                           (add-stylesheet (style (find-submode 'search-buffer-mode)))))
    (prompter:destructor (lambda (prompter source)
                           (declare (ignore prompter source))
                           (unless (keep-search-hints-p (current-buffer))
