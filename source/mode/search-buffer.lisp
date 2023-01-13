@@ -9,6 +9,11 @@
   "Mode for searching text withing."
   ((visible-in-status-p nil)
    (rememberable-p nil)
+   (show-search-hint-scope-p
+    nil
+    :type boolean
+    :documentation "Whether `style' is applied to parent element where a match
+is found.")
    (style
     (theme:themed-css (theme *browser*)
       `("[nyxt-search-hint]"
@@ -17,7 +22,13 @@
         :z-index #.(1- (expt 2 31)))
       `(".nyxt-current-search-hint"
         :background-color ,(str:concat theme:accent " !important")
-        :color ,(str:concat theme:on-accent " !important")))
+        :color ,(str:concat theme:on-accent " !important"))
+      `(".nyxt-search-element-hint"
+        ;; Black with opacity set to 20%
+        ;; TODO If the theme colors would be always specified in HEX, it would
+        ;; be trivial to add opacity to theme:on-background:
+        ;; :background-color ,(str:concat theme:on-background "14")
+        :background-color "#00000014"))
     :documentation "The style of the search overlays.")
    (keyscheme-map
     (define-keyscheme-map "search-buffer-mode" ()
@@ -118,14 +129,20 @@
       (ps:chain range (set-start child (ps:lisp beg)))
       (ps:chain range (set-end child (ps:lisp end)))
       (ps:chain range (surround-contents match))
-      (ps:chain match (set-attribute "nyxt-search-hint" (ps:lisp match-index))))))
+      (ps:chain match (set-attribute "nyxt-search-hint" (ps:lisp match-index))))
+    ;; TODO Extract so that it's not evaluated so many times.
+    (when (ps:lisp (show-search-hint-scope-p (find-submode 'search-buffer-mode)))
+      (ps:chain elem class-list (add "nyxt-search-element-hint")))))
 
 (define-command remove-search-hints ()
   "Remove all search hints."
   (ps-eval
-   (dolist (match (nyxt/ps:qsa document "[nyxt-search-hint]"))
-     (ps:chain match parent-node (insert-before (ps:chain match first-child) match))
-     (ps:chain match (remove)))))
+    (dolist (match (nyxt/ps:qsa document "[nyxt-search-hint]"))
+      (ps:chain match parent-node (insert-before (ps:chain match first-child) match))
+      (ps:chain match (remove)))
+    (when (ps:lisp (show-search-hint-scope-p (find-submode 'search-buffer-mode)))
+      (ps:dolist (element (nyxt/ps:qsa document ".nyxt-search-element-hint"))
+        (ps:chain element class-list (remove "nyxt-search-element-hint"))))))
 
 (define-parenscript highlight-current-hint (&key selector scroll)
   ;; There should be, at most, one element with the
