@@ -6,7 +6,10 @@
 (in-package :nyxt/search-buffer-mode)
 
 (define-mode search-buffer-mode ()
-  "Mode for searching text withing."
+  "Incremental in-buffer search.
+
+The search matches are updated when `minimum-search-length' characters are
+inputted."
   ((visible-in-status-p nil)
    (rememberable-p nil)
    (show-search-hint-scope-p
