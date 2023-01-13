@@ -228,6 +228,7 @@ is found.")
                                          (prompter:name source)
                                          (when (> min-length 1) min-length)))))
 
+;; TODO Add option to pass input?
 (define-command search-buffer (&key case-sensitive-p)
   "Search on the current buffer.
 If you want to remove the search hints when you close the search
