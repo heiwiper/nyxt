@@ -188,10 +188,10 @@ is found.")
         (ps:chain elem (scroll-into-view (ps:create block "center")))))))
 
 (define-class search-buffer-source (prompter:source)
-  ((case-sensitive-p nil)
+  ((prompter:name "Search buffer")
    (buffer (current-buffer))
+   (case-sensitive-p nil)
    (minimum-search-length 1)
-   (prompter:name "Search buffer")
    (prompter:actions-on-current-suggestion-enabled-p t)
    (prompter:filter nil)
    (prompter:filter-preprocessor
