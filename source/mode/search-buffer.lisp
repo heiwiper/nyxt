@@ -191,7 +191,7 @@ is found.")
   ((prompter:name "Search buffer")
    (buffer (current-buffer))
    (case-sensitive-p nil)
-   (minimum-search-length 1)
+   (minimum-search-length 3)
    (prompter:actions-on-current-suggestion-enabled-p t)
    (prompter:filter nil)
    (prompter:filter-preprocessor
