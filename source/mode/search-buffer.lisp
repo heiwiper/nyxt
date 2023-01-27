@@ -198,11 +198,18 @@ is found.")
     (lambda (preprocessed-suggestions source input)
       (declare (ignore preprocessed-suggestions))
       (remove-search-hints)
+      (ps-eval :buffer (current-prompt-buffer)
+        (ps:chain document (query-selector "#input") class-list (remove "error")))
       (when (>= (length input) (minimum-search-length source))
-        ;; KLUDGE This is a hacky solution to the fact we don't cancel the
-        ;; execution of JS defined by add-hint-elements
-        (sleep 0.15)
-        (find-matches input (buffer source)))))
+        (let ((matches (find-matches input (buffer source))))
+          ;; KLUDGE This is a hacky solution to the fact we don't cancel the
+          ;; execution of JS defined by add-hint-elements
+          (sleep 0.15)
+          (unless matches
+            (ps-eval :buffer (current-prompt-buffer)
+              (ps:chain document (query-selector "#input") class-list (add "error")))
+            (echo "No matches found."))
+          matches))))
    (prompter:actions-on-current-suggestion
     (lambda-command highlight-match (suggestion)
       "Scroll to search match."

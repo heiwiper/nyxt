@@ -97,6 +97,8 @@ See `nyxt::attribute-widths'.")
           :padding "3px"
           :width "100%"
           :autofocus "true")
+        `("#input.error"
+          :color "red")
         `(".source"
           :margin-left "10px"
           :margin-top "15px")
