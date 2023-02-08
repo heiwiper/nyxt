@@ -92,8 +92,8 @@ is found.")
                          (when end-omitted-p ellipsis)))))))
 
 (defmethod prompter:object-attributes ((match search-match) (source prompter:source))
-  `(("Text" ,(body match) nil 3)
-    ("ID" ,(identifier match))
+  (declare (ignore source))
+  `(("Text" ,(format-match-string (body match) (beg match) (end match)) nil 3)
     ("Buffer ID" ,(id (buffer match)))
     ("Buffer title" ,(title (buffer match)) nil 2)))
 
