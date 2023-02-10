@@ -255,7 +255,8 @@ If N is negative, go to next pages instead."
   ((prompter:name "List of prompter attributes")
    (prompter:enable-marks-p t)
    (prompter:suggestion-maker 'make-attribute-suggestion)
-   (prompter:actions-on-return #'return-marks-only)))
+   (prompter:actions-on-return #'return-marks-only
+                               :accessor nil)))
 
 (defun return-marks-only (suggestion-values)
   "Return marked suggestions only.

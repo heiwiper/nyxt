@@ -273,7 +273,8 @@ For instance, to include images:
             (dolist (element (rest elements))
               (nyxt/dom:hover-element element))
             (nyxt/dom:hover-element (first elements))
-            nil)))))
+            nil))
+    :accessor nil)))
 
 (export-always 'query-hints)
 (defun query-hints (prompt function

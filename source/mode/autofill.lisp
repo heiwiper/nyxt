@@ -64,7 +64,8 @@ it will be in conflict with common-lisp:fill."))
    (prompter:actions-on-return
     (lambda-command autofill* (autofills)
       (ffi-buffer-paste (current-buffer)
-                        (funcall (first autofills))))))
+                        (funcall (first autofills))))
+    :accessor nil))
   (:export-class-name-p t)
   (:metaclass user-class))
 
