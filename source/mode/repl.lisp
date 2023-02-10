@@ -59,8 +59,7 @@ Features:
     :type (maybe ndebug:condition-wrapper)
     :documentation "The condition raised during the `input' execution."))
   (:export-class-name-p t)
-  (:export-accessor-names-p t)
-  (:accessor-name-transformer (class*:make-name-transformer name)))
+  (:export-accessor-names-p t))
 
 (defmethod input ((evaluation evaluation) &key &allow-other-keys)
   (slot-value evaluation 'input))
