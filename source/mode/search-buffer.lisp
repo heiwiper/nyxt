@@ -214,9 +214,19 @@ is found.")
     (lambda-command highlight-match (suggestion)
       "Scroll to search match."
       (with-current-buffer (set-current-buffer (buffer suggestion) :focus nil)
-        (highlight-current-hint :selector (format nil "[nyxt-search-hint=\"~a\"]"
-                                                  (match-index suggestion))
-                                :scroll t))))
+        (let ((selector (format nil "[nyxt-search-hint=\"~a\"]"
+                                (match-index suggestion))))
+          (if (ps-eval :buffer (buffer suggestion)
+                (let ((elem (nyxt/ps:qs document (ps:lisp selector))))
+                  (and elem (nyxt/ps:element-visible-p elem))))
+              (highlight-current-hint :selector selector
+                                      :scroll t)
+              (progn
+                (setf (prompter:suggestions (current-source))
+                      (delete suggestion
+                              (slot-value (current-source) 'prompter:suggestions)
+                              :key #'prompter:value))
+                (prompter:run-action-on-current-suggestion (current-prompt-buffer))))))))
    (prompter:constructor (lambda (source)
                            (declare (ignore source))
                            (add-stylesheet (style (find-submode 'search-buffer-mode)))))
@@ -234,6 +244,13 @@ is found.")
     (setf (prompter:name source) (format nil "~a ~@[(~a+ chars)~]"
                                          (prompter:name source)
                                          (when (> min-length 1) min-length)))))
+
+(defmethod (setf prompter:suggestions) (value (source search-buffer-source))
+  (setf (slot-value source 'prompter:suggestions) value)
+  (unless value
+    (ps-eval :buffer (current-prompt-buffer)
+      (ps:chain document (query-selector "#input") class-list (add "error")))
+    (echo "No matches found.")))
 
 ;; TODO Add option to pass input?
 (define-command search-buffer (&key case-sensitive-p)
