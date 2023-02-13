@@ -151,3 +151,8 @@
               (not (= (chain computed-style "visibility") "hidden"))
               (not (= (chain computed-style "display") "none")))
          t nil)))
+
+(export-always 'element-visible-p)
+(defpsmacro element-visible-p (element)
+  "Whether ELEMENT is visible."
+  `(not (= 0 (ps:@ ,element offset-height))))
