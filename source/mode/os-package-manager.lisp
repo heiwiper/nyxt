@@ -83,8 +83,7 @@
   ((prompter:name "Packages")
    (prompter:enable-marks-p t)
    (prompter:constructor (ospm:list-packages))
-   (prompter:active-attributes-keys '("Name" "Version" "Synopsis")
-                                    :accessor nil)))
+   (prompter:active-attributes-keys '("Name" "Version" "Synopsis"))))
 
 (define-class os-manifest-source (prompter:source)
   ((prompter:name "Manifests")

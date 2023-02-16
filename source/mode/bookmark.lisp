@@ -143,8 +143,7 @@ In particular, we ignore the protocol (e.g. HTTP or HTTPS does not matter)."
   ((prompter:name "Bookmarks")
    (prompter:constructor (files:content (bookmarks-file (current-buffer))))
    (prompter:enable-marks-p t)
-   (prompter:active-attributes-keys '("URL" "Title" "Tags")
-                                    :accessor nil))
+   (prompter:active-attributes-keys '("URL" "Title" "Tags")))
   (:export-class-name-p t))
 
 (defmethod url-sources ((mode bookmark-mode) actions-on-return)

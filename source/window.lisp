@@ -199,8 +199,7 @@ not try to quit the browser."
   ((prompter:name "Windows")
    (prompter:enable-marks-p t)
    (prompter:constructor (window-list))
-   (prompter:actions-on-return (lambda-mapped-command window-delete)
-                               :accessor nil)))
+   (prompter:actions-on-return (lambda-mapped-command window-delete))))
 
 (defmethod prompter:object-attributes ((window window) (source window-source))
   (declare (ignore source))

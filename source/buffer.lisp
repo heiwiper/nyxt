@@ -1290,8 +1290,7 @@ proceeding."
    (prompter:enable-marks-p t)
    (prompter:actions-on-return (list (lambda-unmapped-command set-current-buffer)
                                      (lambda-mapped-command buffer-delete)
-                                     'reload-buffers)
-                               :accessor nil)
+                                     'reload-buffers))
    (prompter:actions-on-current-suggestion-enabled-p t)
    (prompter:actions-on-current-suggestion-delay 0.1)
    (prompter:actions-on-current-suggestion (lambda-command set-current-buffer* (buffer)
@@ -1462,8 +1461,7 @@ URL-DESIGNATOR is then transformed by BUFFER's `buffer-load-hook'."
                            (history-initial-suggestions)))
    (prompter:enable-marks-p t)
    (prompter:filter-preprocessor nil)   ; Don't remove non-exact results.
-   (prompter:actions-on-return #'buffer-load*
-                               :accessor nil))
+   (prompter:actions-on-return #'buffer-load*))
   (:export-class-name-p t)
   (:metaclass user-class))
 
@@ -1618,8 +1616,7 @@ Finally, if nothing else, set the `engine' to the `default-search-engine'."))
       (input->queries input
                       :check-dns-p t
                       :engine-completion-p t)))
-   (prompter:actions-on-return #'buffer-load*
-                               :accessor nil))
+   (prompter:actions-on-return #'buffer-load*))
   (:export-class-name-p t)
   (:documentation "This prompter source tries to \"do the right thing\" to
 generate a new URL query from user input.

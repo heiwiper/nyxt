@@ -64,8 +64,7 @@ for which the `executable' slot is non-nil."
    (prompter:constructor
     (lambda (source)
       (password:list-passwords (password-instance source))))
-   (prompter:actions-on-return password-source-actions
-                               :accessor nil)))
+   (prompter:actions-on-return password-source-actions)))
 
 (defun password-debug-info ()
   (alex:when-let ((interface (password-interface (current-buffer))))

@@ -28,8 +28,7 @@
        (mapc #'reopen-dead-buffer buffer-list)
        (set-current-buffer (or (first (prompter:marks (current-source)))
                                (current-suggestion-value (current-prompt-buffer)))))
-     (lambda-mapped-command reopen-dead-buffer))
-    :accessor nil)))
+     (lambda-mapped-command reopen-dead-buffer)))))
 
 (define-command reopen-buffer ()
   "Reopen queried deleted buffer(s)."
