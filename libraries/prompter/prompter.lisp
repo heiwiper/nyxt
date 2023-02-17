@@ -293,9 +293,8 @@ first (resp. last) one of destination source."
 (defun first-suggestion (prompter)
   "Set `current-suggestion' to PROMPTER's first suggestion.
 Empty sources are skipped."
-  (let ((first-non-empty-source
-          (or (find-if #'nonempty-source-p (sources prompter))
-              (first (sources prompter)))))
+  (let ((first-non-empty-source (first (remove-if #'empty-source-p
+                                                  (sources prompter)))))
     (setf (current-suggestion prompter)
           (list first-non-empty-source 0))
     (when (and (auto-return-p prompter)
@@ -305,10 +304,8 @@ Empty sources are skipped."
 (export-always 'last-suggestion)
 (defun last-suggestion (prompter)
   "Set `current-suggestion' to PROMPTER's last suggestion."
-  (let ((last-non-empty-source
-          (or (find #'nonempty-source-p (sources prompter)
-                    :from-end t)
-              (first (last (sources prompter))))))
+  (let ((last-non-empty-source (alex:lastcar (remove-if #'empty-source-p
+                                                        (sources prompter)))))
     (setf (current-suggestion prompter)
           (list last-non-empty-source
                 (1- (length (suggestions last-non-empty-source)))))))
