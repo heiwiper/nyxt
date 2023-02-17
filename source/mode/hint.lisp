@@ -249,7 +249,7 @@ For instance, to include images:
         (highlight-selected-hint :element suggestion
                                  :scroll nil))))
    (prompter:actions-on-marks
-    (lambda (marks)
+    (lambda-command highlight-marked-hints (marks)
       (let ((%marks (mapcar (lambda (mark) (str:concat "#nyxt-hint-" (identifier mark)))
                             marks)))
         (ps-eval

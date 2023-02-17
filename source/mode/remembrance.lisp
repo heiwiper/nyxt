@@ -321,7 +321,7 @@ This induces a performance cost."))
                                               :query (list (cons "query" (quri:url-encode query))
                                                            (cons "origin-buffer-id"
                                                                  (quri:url-encode (write-to-string (id (current-buffer))))))))))
-                                   #'buffer-load*
+                                   'buffer-load*
                                    (lambda-command new-buffer-load (suggestion-values)
                                      "Load cache entries in new buffer(s)."
                                      (mapc (lambda (page-doc) (make-buffer :url (page-url page-doc))) (rest suggestion-values))
@@ -381,7 +381,7 @@ See also `auto-cache-on-load-p' in `remembrance-mode'."
   (let ((buffer (or buffer
                     (prompt1 :prompt "View changes for buffer"
                              :sources (make-instance 'buffer-source
-                                                     :actions-on-return #'identity))))
+                                                     :actions-on-return 'identity))))
         (mode (find-submode 'remembrance-mode)))
     (alex:when-let ((doc (find-url (url buffer) mode)))
       ;; TODO: Display in internal page.
@@ -396,7 +396,7 @@ BUFFER can be a list of buffers."
   (let ((buffers (or (alex:ensure-list buffer)
                      (prompt :prompt "Cache content of buffers"
                              :sources (make-instance 'buffer-source
-                                                     :actions-on-return #'identity)))))
+                                                     :actions-on-return 'identity)))))
     (dolist (buffer buffers)
       (buffer->cache buffer (find-submode 'remembrance-mode)))))
 

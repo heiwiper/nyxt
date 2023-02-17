@@ -284,7 +284,7 @@ URLS is either a list or a single element."
 
 (define-command set-url-from-bookmark
     (&key (actions-on-return
-           (list #'buffer-load*
+           (list 'buffer-load*
                  (lambda-command new-buffer-load (suggestion-values)
                    "Load bookmark(s) in new buffer(s)."
                    (mapc (lambda (url) (make-buffer :url (url url))) (rest suggestion-values))

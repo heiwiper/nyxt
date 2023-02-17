@@ -653,7 +653,7 @@ set of useful URLs or preparing a list to send to a someone else."
                   :sources (make-instance 'buffer-source
                                           :constructor (remove-if #'internal-url-p (buffer-list)
                                                                   :key #'url)
-                                          :actions-on-return #'identity
+                                          :actions-on-return 'identity
                                           :enable-marks-p t))))
     (unwind-protect
          (spinneret:with-html-string

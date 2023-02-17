@@ -254,7 +254,8 @@ Example:
           :sources (make-instance 'search-buffer-source
                                   :case-sensitive-p case-sensitive-p
                                   :actions-on-return
-                                  (lambda (search-match)
+                                  (lambda-command identity (search-match)
+                                    "Select search match."
                                     (unless (keep-search-hints-p (current-buffer))
                                       (remove-search-hints))
                                     search-match))))
@@ -263,7 +264,7 @@ Example:
   "Search multiple buffers."
   (let ((buffers (prompt :prompt "Search buffer(s)"
                          :sources (make-instance 'buffer-source ; TODO: Define class?
-                                                 :actions-on-return #'identity
+                                                 :actions-on-return 'identity
                                                  :enable-marks-p t))))
     (prompt
      :prompt "Search text"

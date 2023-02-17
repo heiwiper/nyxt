@@ -478,7 +478,7 @@ of buffers."
                   :prompt "Select headings from buffers"
                   :sources (make-instance 'buffer-source
                                           :enable-marks-p t
-                                          :actions-on-return #'identity))))
+                                          :actions-on-return 'identity))))
     (prompt
      :prompt "Jump to heading"
      :sources (loop for buffer in buffers
