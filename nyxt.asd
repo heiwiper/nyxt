@@ -147,6 +147,7 @@ The renderer is configured from NYXT_RENDERER or `*nyxt-renderer*'."))
                  (:file "conditions")
                  (:file "debug")
                  (:file "user-interface")))
+                 (:file "prompt-buffer-source")
                (:module "Core"
                 :pathname ""
                 :serial t
