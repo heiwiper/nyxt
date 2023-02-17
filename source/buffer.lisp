@@ -971,7 +971,7 @@ identifiers."
               (ignore-errors (analysis:extract-keywords contents))))
       (slot-value buffer 'keywords)))
 
-(define-class keyword-source (prompter:source)
+(define-class keyword-source (prompt-buffer-source)
   ((prompter:name "Keywords")
    (buffer
     (current-buffer)
@@ -1294,7 +1294,7 @@ proceeding."
       (setf buffers (alex:rotate buffers -1)))
     buffers))
 
-(define-class buffer-source (prompter:source)
+(define-class buffer-source (prompt-buffer-source)
   ((prompter:name "Buffer list")
    (prompter:constructor (buffer-initial-suggestions :current-is-last-p nil))
    (prompter:enable-marks-p t)
@@ -1315,7 +1315,7 @@ proceeding."
   (:export-class-name-p t)
   (:metaclass user-class))
 
-(defmethod prompter:object-attributes ((buffer buffer) (source prompter:source))
+(defmethod prompter:object-attributes ((buffer buffer) (source prompt-buffer-source))
   (declare (ignore source))
   `(("URL" ,(render-url (url buffer)) nil 3)
     ("Title" ,(title buffer) nil 2)
@@ -1472,7 +1472,7 @@ URL-DESIGNATOR is then transformed by BUFFER's `buffer-load-hook'."
   (mapc (lambda (url) (make-buffer :url (url url))) (rest url-list))
   (buffer-load (url (first url-list))))
 
-(define-class global-history-source (prompter:source)
+(define-class global-history-source (prompt-buffer-source)
   ((prompter:name "Global history")
    ;; REVIEW: Collect history suggestions asynchronously or not?  It's fast
    ;; enough with <10,000 entries on @ambrevar's laptop.
@@ -1623,7 +1623,7 @@ Finally, if nothing else, set the `engine' to the `default-search-engine'."))
                           (with-protect ("Error while completing default search: ~a" :condition)
                             (funcall (completion-function engine) all-terms))))))))
 
-(define-class new-url-or-search-source (prompter:source)
+(define-class new-url-or-search-source (prompt-buffer-source)
   ((prompter:name "New URL or search query")
    (prompter:filter-preprocessor
     (lambda (suggestions source input)

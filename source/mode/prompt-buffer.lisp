@@ -12,7 +12,7 @@ It displays a list of suggestions which are filtered as the user types.
 Many prompter-buffer-specific commands are available; you can list them with
 `run-prompt-buffer-command', bound to \"f1 b\" by default.
 
-The prompt buffer can have multiple `prompter:source's of suggestions.  Each
+The prompt buffer can have multiple `prompt-buffer-source's of suggestions.  Each
 source has its own properties, such as the ability to mark multiple suggestions.
 The same source can be used by different prompt buffers.
 
@@ -253,7 +253,7 @@ If N is negative, go to next pages instead."
                  :value attribute
                  :attributes `(("Attribute key" ,attribute))))
 
-(define-class attribute-source (prompter:source)
+(define-class attribute-source (prompt-buffer-source)
   ((prompter:name "List of prompter attributes")
    (prompter:enable-marks-p t)
    (prompter:suggestion-maker 'make-attribute-suggestion)
@@ -337,12 +337,12 @@ current unmarked suggestion."
                                                  (t (documentation action 'function)))))
                                        "")))))
 
-(define-class action-on-return-source (prompter:source)
+(define-class action-on-return-source (prompt-buffer-source)
   ((prompter:name "List of actions-on-return")
    (prompter:constructor (prompt-buffer-actions-on-return))
    (prompter:suggestion-maker 'make-action-suggestion)))
 
-(define-class action-on-current-suggestion-source (prompter:source)
+(define-class action-on-current-suggestion-source (prompt-buffer-source)
   ((prompter:name "List of actions-on-current-suggestion")
    (prompter:constructor (prompt-buffer-actions-on-current-suggestion))
    (prompter:suggestion-maker 'make-action-suggestion)))
@@ -438,7 +438,7 @@ Only available if `prompter:enable-marks-p' is non-nil."
     (containers:container->list
      (prompter:history first-prompt-buffer))))
 
-(define-class prompt-buffer-history-source (prompter:source)
+(define-class prompt-buffer-history-source (prompt-buffer-source)
   ((prompter:name "Prompt buffer input history")
    (prompter:constructor (history-entries))))
 
