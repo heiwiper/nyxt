@@ -911,6 +911,8 @@ identifiers."
                                    (from (ps:@ node shadow-root children))
                                    (concat (ps:chain *array (from (ps:@ node children)))))
                          (ps:chain node children)))
+        (when (ps:chain node shadow-root)
+          (ps:chain node (set-attribute "nyxt-shadow-root" "")))
         (add-nyxt-identifiers child))
       nyxt-identifier-counter)
     (setf nyxt-identifier-counter (add-nyxt-identifiers (ps:chain document body))))
