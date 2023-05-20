@@ -113,7 +113,7 @@ For instance, to include images:
   (let ((fragment (ps:chain document (create-document-fragment)))
         (hints (ps:lisp (list 'quote hints)))
         (i 0))
-    (dolist (element (nyxt/ps:qsa document "[nyxt-hintable]"))
+    (dolist (element (nyxt/ps:rqsa document "[nyxt-hintable]"))
       (let ((hint (aref hints i)))
         (ps:chain element (set-attribute "nyxt-hint" hint))
         (ps:chain fragment (append-child (create-hint-overlay element hint)))
@@ -149,7 +149,7 @@ For instance, to include images:
                                            alphabet))))))
 
 (define-parenscript set-hintable-attribute (selector)
-  (let ((elements (nyxt/ps:qsa document (ps:lisp selector)))
+  (let ((elements (nyxt/ps:rqsa document (ps:lisp selector)))
         (in-view-port-p (ps:lisp (eq :vi (hinting-type (find-submode 'hint-mode))))))
     (ps:dolist (element elements)
       (if in-view-port-p
@@ -158,7 +158,7 @@ For instance, to include images:
           (ps:chain element (set-attribute "nyxt-hintable" ""))))))
 
 (define-parenscript remove-hintable-attribute ()
-  (ps:dolist (element (nyxt/ps:qsa document "[nyxt-hintable]"))
+  (ps:dolist (element (nyxt/ps:rqsa document "[nyxt-hintable]"))
     (ps:chain element (remove-attribute "nyxt-hintable"))))
 
 (defun add-hints (&key selector (buffer (current-buffer)))
@@ -176,10 +176,10 @@ For instance, to include images:
           collect elem)))
 
 (define-parenscript-async remove-hint-elements ()
-  (ps:dolist (element (nyxt/ps:qsa document ":not(.nyxt-search-node) > .nyxt-hint"))
+  (ps:dolist (element (nyxt/ps:rqsa document ":not(.nyxt-search-node) > .nyxt-hint"))
     (ps:chain element (remove)))
   (when (ps:lisp (show-hint-scope-p (find-submode 'hint-mode)))
-    (ps:dolist (element (nyxt/ps:qsa document ".nyxt-element-hint"))
+    (ps:dolist (element (nyxt/ps:rqsa document ".nyxt-element-hint"))
       (ps:chain element class-list (remove "nyxt-element-hint")))))
 
 (defun remove-hints (&key (buffer (current-buffer)))
