@@ -381,7 +381,7 @@ Return two values:
 
 (export-always 'click-element)
 (define-parenscript click-element (element)
-  (ps:chain (nyxt/ps:qs-nyxt-id document (ps:lisp (get-nyxt-id element))) (click)))
+  (ps:chain (nyxt/ps:rqs-nyxt-id document (ps:lisp (get-nyxt-id element))) (click)))
 
 (export-always 'focus-select-element)
 (define-parenscript focus-select-element (element)
