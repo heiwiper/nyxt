@@ -31,6 +31,21 @@
   "context.querySelector() tailored for Nyxt IDs."
   `(chain ,context (query-selector (lisp (format nil "[nyxt-identifier=\"~a\"]" ,id)))))
 
+(export-always 'rqs-nyxt-id)
+(defpsmacro rqs-nyxt-id (context id)
+  "context.querySelector() tailored for Nyxt IDs."
+  `(flet ((recursive-query-selector (context selector)
+            (let ((node (qs context selector)))
+              (if node
+                  node
+                  (let ((node-iterator (chain document (create-node-iterator context (@ *Node -e-l-e-m-e-n-t_-n-o-d-e))))
+                        current-node)
+                    (loop while (and (setf current-node (chain node-iterator (next-node))) (not node))
+                          do (when (@ current-node shadow-root)
+                               (setf node (recursive-query-selector (@ current-node shadow-root) selector))))
+                    node)))))
+     (recursive-query-selector ,context (stringify "[nyxt-identifier=\"" ,id "\"]"))))
+
 (export-always 'active-element)
 (defpsmacro active-element (context)
   "Shorthand for active element in CONTEXT."
