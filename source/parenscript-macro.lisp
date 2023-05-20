@@ -167,3 +167,19 @@
           0)
        (= (chain window (get-computed-style ,element) "visibility")
           "hidden")))
+
+(export-always 'rqsa)
+(defpsmacro rqsa (context selector)
+  "Recursive version of context.querySelectorAll() which goes through ShadowDOMs."
+  `(flet ((recursiveQuerySelectorAll (context selector)
+            (let ((nested-results (chain *array
+                                         (from (chain context (query-selector-all "[nyxt-shadow-root]")))
+                                         (map #'(lambda (shadow-root-element)
+                                                  (recursiveQuerySelectorAll (@ shadow-root-element shadow-root) selector)))
+                                         (filter #'(lambda (item) (if item t false)))
+                                         (flat)))
+                  (results (chain *array (from (chain context (query-selector-all selector))))))
+              (when (not (equal (@ nested-results length) 0))
+                (setf results (chain nested-results (concat results))))
+              results)))
+     (recursiveQuerySelectorAll ,context ,selector)))
