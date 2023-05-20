@@ -31,6 +31,23 @@
   "context.querySelector() tailored for Nyxt IDs."
   `(chain ,context (query-selector (lisp (format nil "[nyxt-identifier=\"~a\"]" ,id)))))
 
+(export-always 'rqs-nyxt-id)
+(defpsmacro rqs-nyxt-id (context id)
+  "context.querySelector() tailored for Nyxt IDs."
+  `(flet ((recursive-query-selector (context selector)
+            (let ((result (chain context (query-selector selector))))
+              (if result
+                  result
+                  (progn (chain *array
+                                (from (chain context (query-selector-all "[nyxt-shadow-root]")))
+                                (every #'(lambda (shadow-root-element)
+                                           (setf result
+                                                 (recursive-query-selector (@ shadow-root-element shadow-root)
+                                                                           selector))
+                                           (if result false t))))
+                         result)))))
+     (recursive-query-selector ,context (lisp (format nil "[nyxt-identifier=\'~a\']" ,id)))))
+
 (export-always 'active-element)
 (defpsmacro active-element (context)
   "Shorthand for active element in CONTEXT."
