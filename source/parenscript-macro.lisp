@@ -167,3 +167,16 @@
           0)
        (= (chain window (get-computed-style ,element) "visibility")
           "hidden")))
+
+(export-always 'rqsa)
+(defpsmacro rqsa (context selector)
+  "Recursive version of context.querySelectorAll() which goes through ShadowDOMs."
+  `(flet ((recursive-query-selector-all (context selector)
+            (ps:let ((nodes (ps:chain *array (from (nyxt/ps:qsa context selector))))
+                     (node-iterator (ps:chain document (create-node-iterator context (ps:@ *Node -e-l-e-m-e-n-t_-n-o-d-e))))
+                     current-node)
+              (ps:loop while (ps:setf current-node (ps:chain node-iterator (next-node)))
+                 do (ps:when (ps:@ current-node shadow-root)
+                      (ps:chain *array prototype push (apply nodes (recursive-query-selector-all (ps:@ current-node shadow-root) selector)))))
+              nodes)))
+     (recursive-query-selector-all ,context ,selector)))
