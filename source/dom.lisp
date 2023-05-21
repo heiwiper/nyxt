@@ -129,6 +129,13 @@ The most useful functions are:
         (setf (ps:chain object :children)
               (loop for child in (ps:chain element child-nodes)
                     collect (process-element child))))
+      (when (and (ps:@ element shadow-root)
+                 (ps:@ element shadow-root first-child))
+        (setf (ps:chain object :children)
+              (loop for child in (ps:chain *array
+                                           (from (ps:@ element shadow-root children))
+                                           (concat (ps:chain *array (from (ps:@ element children)))))
+                    collect (process-element child))))
       (when (or (equal (ps:@ element node-name) "#text")
                 (equal (ps:@ element node-name) "#comment")
                 (equal (ps:@ element node-name) "#cdata-section"))
