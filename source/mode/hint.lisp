@@ -97,7 +97,7 @@ For instance, to include images:
        "g f" 'follow-hint-nosave-buffer
        "g F" 'follow-hint-nosave-buffer-focus)))))
 
-(define-parenscript-async hint-elements (hints)
+(define-parenscript-async hint-element (element hint)
   (defun create-hint-overlay (original-element hint)
     "Create a DOM element to be used as a hint."
     (ps:let* ((rect (ps:chain original-element (get-bounding-client-rect)))
@@ -110,17 +110,14 @@ For instance, to include images:
       (setf (ps:@ element text-content) hint)
       element))
 
-  (let ((fragment (ps:chain document (create-document-fragment)))
-        (hints (ps:lisp (list 'quote hints)))
-        (i 0))
-    (dolist (element (nyxt/ps:rqsa document "[nyxt-hintable]"))
-      (let ((hint (aref hints i)))
-        (ps:chain element (set-attribute "nyxt-hint" hint))
-        (ps:chain fragment (append-child (create-hint-overlay element hint)))
-        (when (ps:lisp (show-hint-scope-p (find-submode 'hint-mode)))
-          (ps:chain element class-list (add "nyxt-element-hint")))
-        (setf i (1+ i))))
-    (ps:chain document body (append-child fragment))
+  (let ((element (nyxt/ps:rqs-nyxt-id document (ps:lisp (nyxt/dom:get-nyxt-id element))))
+        (hint (ps:lisp hint)))
+    (ps:chain console (log hint))
+    (ps:chain console (log element))
+    (ps:chain element (set-attribute "nyxt-hint" hint))
+    (ps:chain document body (append-child (create-hint-overlay element hint)))
+    (when (ps:lisp (show-hint-scope-p (find-submode 'hint-mode)))
+      (ps:chain element class-list (add "nyxt-element-hint")))
     ;; Returning fragment makes WebKit choke.
     nil))
 
@@ -169,9 +166,9 @@ For instance, to include images:
   (update-document-model :buffer buffer)
   (let* ((hintable-elements (clss:select "[nyxt-hintable]" (document-model buffer)))
          (hints (generate-hints (length hintable-elements))))
-    (hint-elements hints)
     (loop for elem across hintable-elements
           for hint in hints
+          do (hint-element elem hint)
           do (plump:set-attribute elem "nyxt-hint" hint)
           collect elem)))
 
