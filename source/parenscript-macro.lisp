@@ -166,13 +166,15 @@
           (radius (parse-float (chain computed-style border-top-left-radius)))
           (rounded-border-offset (ceiling (* radius (- 1 (sin (/ pi 4))))))
           (offset (max coord-truncation-offset rounded-border-offset))
-          (el (chain document (element-from-point (+ (chain rect left) offset)
-                                                  (+ (chain rect top) offset)))))
+          (el (chain ,element (get-root-node ,element) (element-from-point (+ (chain rect left) offset)
+                                                                           (+ (chain rect top) offset)))))
      (if (or (>= offset (chain rect width))
              (>= offset (chain rect height)))
          t
          (progn (loop while (and el (not (eq el element)))
-                      do (setf el (chain el parent-node)))
+                      do (setf el (if (instanceof (chain el parent-node) *shadow-root)
+                                      (chain el parent-node host)
+                                      (chain el parent-node))))
                 (null el)))))
 
 (export-always 'element-invisible-p)
